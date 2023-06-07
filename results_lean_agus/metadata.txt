@@ -1,0 +1,21 @@
+v001:
+64x64
+Rs 0.01-5
+Iin 0.01-2
+Cm = 10
+Cs = 0.1
+It_dot = It*(Vt - 10) + 5*It**2 - It**3 + 0.1
+Vt_dot = Iin/Cm - It*(1/Cm + 1/Cs) + Vs/(Rs*Cs)
+Vs_dot = (1/Cs)*(It - Vs/Rs)
+
+
+v002:
+140x140
+Rs 0.01-8
+Iin 0.01-3
+Cm = 10
+Cs = 0.1
+It_dot = It*(Vt - 10) + 5*It**2 - It**3 + 0.1
+Vt_dot = Iin/Cm - It*(1/Cm + 1/Cs) + Vs/(Rs*Cs)
+Vs_dot = (1/Cs)*(It - Vs/Rs)
+17mins aprox
