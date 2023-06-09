@@ -4,11 +4,10 @@ import time
 from period_funcs import period
 from numba import njit, jit
 
-Cm = 10
 Cs = 0.1
 
 @njit()
-def modelo_thyristor(It, Vt, Vs, Rs, Iin):
+def modelo_thyristor(It, Vt, Vs, Rs, Iin, Cm):
     It_dot = It*(Vt - 10) + 5*It**2 - It**3 + 0.1
     Vt_dot = Iin/Cm - It*(1/Cm + 1/Cs) + Vs/(Rs*Cs)
     Vs_dot = (1/Cs)*(It - Vs/Rs)
@@ -17,7 +16,7 @@ def modelo_thyristor(It, Vt, Vs, Rs, Iin):
 
 
 @njit()
-def rk4_numba(It0, Vt0, Vs0, N_steps, dt, Rs, Iin):
+def rk4_numba(It0, Vt0, Vs0, N_steps, dt, Rs, Iin, Cm):
     It_OT = np.zeros(N_steps)
     Vt_OT = np.zeros(N_steps)
     Vs_OT = np.zeros(N_steps)
@@ -26,10 +25,10 @@ def rk4_numba(It0, Vt0, Vs0, N_steps, dt, Rs, Iin):
     Vs_OT[0] = Vs0
 
     for i in range(1, N_steps):
-        k1a, k1b, k1c = np.asarray(modelo_thyristor(It_OT[i-1], Vt_OT[i-1], Vs_OT[i-1], Rs, Iin))*dt
-        k2a, k2b, k2c = np.asarray(modelo_thyristor(It_OT[i-1] + k1a*0.5, Vt_OT[i-1] + k1b*0.5, Vs_OT[i-1] + k1c*0.5, Rs, Iin))*dt
-        k3a, k3b, k3c = np.asarray(modelo_thyristor(It_OT[i-1] + k2a*0.5, Vt_OT[i-1] + k2b*0.5, Vs_OT[i-1] + k2c*0.5, Rs, Iin))*dt
-        k4a, k4b, k4c = np.asarray(modelo_thyristor(It_OT[i-1] + k3a, Vt_OT[i-1] + k3b, Vs_OT[i-1] + k3c, Rs, Iin))*dt
+        k1a, k1b, k1c = np.asarray(modelo_thyristor(It_OT[i-1], Vt_OT[i-1], Vs_OT[i-1], Rs, Iin, Cm))*dt
+        k2a, k2b, k2c = np.asarray(modelo_thyristor(It_OT[i-1] + k1a*0.5, Vt_OT[i-1] + k1b*0.5, Vs_OT[i-1] + k1c*0.5, Rs, Iin, Cm))*dt
+        k3a, k3b, k3c = np.asarray(modelo_thyristor(It_OT[i-1] + k2a*0.5, Vt_OT[i-1] + k2b*0.5, Vs_OT[i-1] + k2c*0.5, Rs, Iin, Cm))*dt
+        k4a, k4b, k4c = np.asarray(modelo_thyristor(It_OT[i-1] + k3a, Vt_OT[i-1] + k3b, Vs_OT[i-1] + k3c, Rs, Iin, Cm))*dt
 
         It_OT[i] = It_OT[i-1] + (k1a + 2*k2a + 2*k3a + k4a)/6
         Vt_OT[i] = Vt_OT[i-1] + (k1b + 2*k2b + 2*k3b + k4b)/6
@@ -38,22 +37,29 @@ def rk4_numba(It0, Vt0, Vs0, N_steps, dt, Rs, Iin):
     return It_OT, Vt_OT, Vs_OT
 
 if __name__ == "__main__":
-    total_time = 600
+    total_time = 1600
     dt = 0.001
     N_steps = int(total_time/dt)
-    Iin0 = 0.8
-    Rs0 = 3.1
+    Iin0 = 0.66
+    Rs0 = 4
+    Cm = 5
 
     It0 = Vt0 = Vs0 = 0.1
+    #  It0 = 1
+    #  Vt0 = 5.91
+    #  Vs0 = 100/29
 
 
-    It_OT, Vt_OT, Vs_OT = rk4_numba(It0, Vt0, Vs0, N_steps, dt, Rs0, Iin0)
-    It_OT = It_OT[-int(300/dt):]
-    Vt_OT = Vt_OT[-int(300/dt):]
+    It_OT, Vt_OT, Vs_OT = rk4_numba(It0, Vt0, Vs0, N_steps, dt, Rs0, Iin0, Cm)
+    It_OT = It_OT
+    Vt_OT = Vt_OT
     times = np.arange(0, N_steps*dt, dt)
-    fig, ax = plt.subplots(1,1, figsize=(16,9))
-    #  fig, [ax1, ax2, ax3] = plt.subplots(3,1)
-    ax.plot(It_OT, Vt_OT)
+    #  fig, ax = plt.subplots(1,1, figsize=(16,9))
+    fig, [ax1, ax2, ax3] = plt.subplots(3,1, sharex=True, figsize=(16,9))
+    #  ax.plot(It_OT[-150000:], Vt_OT[-150000:])
+    ax1.plot(times, It_OT)
+    ax2.plot(times, Vt_OT)
+    ax3.plot(times, Vs_OT)
     plt.show()
 
     #  t0 = time.time()
@@ -61,7 +67,4 @@ if __name__ == "__main__":
     print(f"Solución de período {period(It_OT, Vt_OT)}")
     #  tf = time.time()
     #  print(f"tardó {tf-t0} en hacer {N_steps}")
-    #  ax1.plot(times, It_OT)
-    #  ax2.plot(times, Vt_OT)
-    #  ax3.plot(times, Vs_OT)
     #  plt.show()

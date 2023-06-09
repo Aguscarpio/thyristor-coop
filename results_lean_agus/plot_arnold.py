@@ -12,6 +12,10 @@ minIin = 0.01
 maxIin = 3
 dimIin = 140
 dimRs = 140
+minRs = 1.5
+maxRs = 4.5
+minIin = 0.1
+maxIin = 2
 
 #  size=24
 
@@ -38,6 +42,45 @@ cm1 = ax1.pcolormesh(kk, tt, periods_grid_super, cmap=cmap, vmin=0.5, vmax=16.5)
 ax1.set_xlabel(r"$R_s$ (a.u)", size=24)
 ax1.set_ylabel(r"$I_{in} $ (ms)", size=24)
 ax1.tick_params(axis='both', which='major', labelsize=24)
+
+
+
+
+from tesfuncs.funcs import *
+Cs = 0.1
+Cm = 10
+
+def trace_J(Iin, Rs):
+        return (-20*Iin**3+50*Iin**2-1)/(10*Iin)-1/(Rs*Cs)
+def det_J(Iin, Rs):
+        return -Iin/(Rs*Cs*Cm)
+
+Iin_vals = np.linspace(0,3,100)
+Rs_vals = (-10*Iin_vals/(20*Iin_vals**3-50*Iin_vals**2+1))/Cs
+
+fig = plt.figure(figsize=(16,9))
+def plot_bifs(size, ax):
+    labsize=24
+    size = 6000
+    Rs,Iin = np.meshgrid(np.linspace(0.000000001,8,size,endpoint=True),
+                        np.linspace(0.000000001,3,size,endpoint=True))
+
+    contour_conditions(Rs, Iin, trace_J(Iin, Rs), conditions = [det_J(Iin, Rs)<=0],
+                                                levels=[0], colors=["#f00"], ax=ax)
+    #  contour_conditions(ROX, ROY, traceJ(XX,YY,a,d)**2-4*detJ(XX,YY,a,b,c,d), conditions=[detJ(XX,YY,a,b,c,d)>=0],
+                                                #  levels=[0], colors=["#ff0"], ax=ax)
+    ax.set_xlim(0,8)
+    ax.set_ylim(0,3)
+    #  ax.set_xlabel(r"$\rho_x$", size=labsize)
+    #  ax.set_ylabel(r"$\rho_y$", size=labsize)
+#  plot_bifs(fig, ax1)
+ax1.plot(Rs_vals, Iin_vals, "r--", zorder=99)
+ax1.set_xlim(minRs, maxRs)
+ax1.set_ylim(minIin, maxIin)
+
+
+
+
 plt.show()
 
 raise

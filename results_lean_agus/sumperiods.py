@@ -1,6 +1,6 @@
 import numpy as np
 
-n_cpus = 14
+n_cpus = 10
 for n in range(n_cpus):
     with open(f"periodsgrid_{n}.npy", "rb") as f:
         pg = np.load(f)

@@ -36,6 +36,7 @@ def period(X, Y):
     for i in range(1,9):
                 candidate_idxs += list(np.where(land(vueltas[:-1]<i, vueltas[1:]>i))[0])
     for i_cand in candidate_idxs:
-        if true_neighbours(X, Y, idx, i_cand, 30, 300, 0.1):
+        #  if true_neighbours(X, Y, idx, i_cand, 30, 300, 0.1):
+        if true_neighbours(X, Y, idx, i_cand, 12, 1500, 0.25):
             return round(vueltas[i_cand])
     return np.nan

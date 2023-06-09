@@ -17,20 +17,25 @@ from period_funcs import period
 
 # TODO: Let users pick the model (+ options than just delayed_wilsoncowan_rk4)
 
-dir_path = "results_lean_agus"
+# Parameters passed with run.py
+arn_number, ncpus, dimRs, dimIin, N_steps = [int(n) for n in sys.argv[1:6]]
+dt = float(sys.argv[6])
+Cm = float(sys.argv[7])
+
+dir_path = f"results_lean_agus/Cm{str(Cm)}"
 
 if not os.path.isdir(f"{dir_path}"):
     os.system(f"mkdir {dir_path}")
 
 It0 = Vt0 = Vs0 = 0.1
 
-minRs = 0.01
-maxRs = 8
-minIin = 0.01
-maxIin = 3
+minRs = 1.5
+maxRs = 4.5
+minIin = 0.1
+maxIin = 2
 
 # main function
-def run_arnold(arn_number, ncpus, dimRs, dimIin, N_steps, dt):
+def run_arnold(arn_number, ncpus, dimRs, dimIin, N_steps, dt, Cm):
 
     # empty grid to fill with period calculations
     periods_grid = np.empty(shape=(dimIin,dimRs))*np.nan
@@ -44,7 +49,7 @@ def run_arnold(arn_number, ncpus, dimRs, dimIin, N_steps, dt):
         Rs_index = 0
         for Rs in np.linspace(minRs, maxRs, dimRs):
             # Numerical integration of the model
-            It_OT, Vt_OT, Vs_OT = rk4_numba(It0, Vt0, Vs0, N_steps, dt, Rs, Iin)
+            It_OT, Vt_OT, Vs_OT = rk4_numba(It0, Vt0, Vs0, N_steps, dt, Rs, Iin, Cm)
             # Period calculation with imported function
             periods_grid[Iin_index][Rs_index] = period(It_OT[-550000:], Vt_OT[-550000:])
             Rs_index += 1
@@ -56,9 +61,6 @@ def run_arnold(arn_number, ncpus, dimRs, dimIin, N_steps, dt):
     with open(f"{dir_path}/periodsgrid_{arn_number}.npy", "wb") as f:
         np.save(f, periods_grid)
 
-# Parameters passed with run.py
-arn_number, ncpus, dimRs, dimIin, N_steps = [int(n) for n in sys.argv[1:6]]
-dt = float(sys.argv[6])
-run_arnold(arn_number, ncpus, dimRs, dimIin, N_steps, dt)
+run_arnold(arn_number, ncpus, dimRs, dimIin, N_steps, dt, Cm)
 
 #  run_arnold(0, 1, 4, 4, 1800000, 0.001)

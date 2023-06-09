@@ -31,6 +31,8 @@ parser.add_argument('-N_steps', type=int, nargs=1, default=[900000],
 
 parser.add_argument('-dt', type=float, nargs=1, help='dt', default=[0.00004])
 
+parser.add_argument('-Cm', type=float, nargs=1, help='Cm', default=[10])
+
 
 # TODO:
 parser.add_argument('--progressbar', action='store_true',
@@ -42,10 +44,11 @@ N_steps = args.N_steps[0]
 dt = args.dt[0]
 dimRs = args.dimRs[0]
 dimIin = args.dimIin[0]
+Cm = args.Cm[0]
 
-if not os.path.isdir(f"results_lean_agus"):
-    os.system(f"mkdir results_lean_agus")
+if not os.path.isdir(f"results_lean_agus/Cm{str(float(Cm))}"):
+    os.system(f"mkdir results_lean_agus/Cm{str(float(Cm))}")
 
 for arn_number in range(ncpus):
     os.system(f"python3 {target_program} {arn_number} {ncpus}" +
-            f" {dimRs} {dimIin} {N_steps} {dt} &")
+            f" {dimRs} {dimIin} {N_steps} {dt} {Cm} &")
