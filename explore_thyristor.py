@@ -12,7 +12,7 @@ d = 0.1
 
 @njit()
 def modelo_thyristor(It, Vt, Vs, Rs, Iin, Cm, Cs, a, b, c, d):
-    It_dot = It*(Vt - a) + 0.2*It*Vt*Vs + b*It**2 - c*It**3 + d
+    It_dot = It*(Vt - a) + b*It**2 - c*It**3 + d
     Vt_dot = Iin/Cm - It*(1/Cm + 1/Cs) + Vs/(Rs*Cs)
     Vs_dot = (1/Cs)*(It - Vs/Rs)
 
@@ -81,7 +81,7 @@ if __name__ == "__main__":
     CsAx = fig2.add_axes([0.15, 0.65, 0.75, 0.03])
     sCs = Slider(CsAx, 'Cs', 0.001, 2, valinit=0.1)
     CmAx = fig2.add_axes([0.15, 0.55, 0.75, 0.03])
-    sCm = Slider(CmAx, 'Cm', 0, 20, valinit=8.47)
+    sCm = Slider(CmAx, 'Cm', 0, 20, valinit=10)
     aAx = fig2.add_axes([0.15, 0.45, 0.75, 0.03])
     sa = Slider(aAx, 'a', 0, 20 , valinit=16.3)
     bAx = fig2.add_axes([0.15, 0.35, 0.75, 0.03])
