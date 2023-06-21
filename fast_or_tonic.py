@@ -24,7 +24,7 @@ with open("results_lean_agus/Cm10.0/periodsgrid_total.npy", "rb") as f:
 #  period_n, period_t = period_temporal(Vs_OT[int(800/dt):], dt)
 #  times = np.arange(0, int(dt*N_steps), dt)
 
-with open("periods_t_grid.npy", "rb") as f:
+with open("periods_burst_grid.npy", "rb") as f:
     periodstgrid_total = np.load(f)
 
 import seaborn as sns
