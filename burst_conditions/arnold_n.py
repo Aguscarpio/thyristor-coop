@@ -13,7 +13,8 @@ import os
 from numba import njit
 from modelo_thyristor_coop import rk4_numba
 from save import save_return, save_data
-from period_funcs import period
+#  from period_funcs import period
+from poincare import period
 
 # TODO: Let users pick the model (+ options than just delayed_wilsoncowan_rk4)
 
@@ -22,7 +23,7 @@ arn_number, ncpus, dimRs, dimIin, N_steps = [int(n) for n in sys.argv[1:6]]
 dt = float(sys.argv[6])
 Cm = float(sys.argv[7])
 
-dir_path = f"results_lean_agus/Cm{str(Cm)}_a16.3"
+dir_path = f"results_lean_agus/Cm{str(Cm)}_b4.85_c0.594"
 
 if not os.path.isdir(f"{dir_path}"):
     os.system(f"mkdir {dir_path}")
@@ -30,9 +31,9 @@ if not os.path.isdir(f"{dir_path}"):
 It0 = Vt0 = Vs0 = 0.1
 
 minRs = 0.01
-maxRs = 8
+maxRs = 5
 minIin = 0.01
-maxIin = 2.5
+maxIin = 3.5
 
 # main function
 def run_arnold(arn_number, ncpus, dimRs, dimIin, N_steps, dt, Cm):
@@ -51,7 +52,7 @@ def run_arnold(arn_number, ncpus, dimRs, dimIin, N_steps, dt, Cm):
             # Numerical integration of the model
             It_OT, Vt_OT, Vs_OT = rk4_numba(It0, Vt0, Vs0, N_steps, dt, Rs, Iin, Cm)
             # Period calculation with imported function
-            periods_grid[Iin_index][Rs_index] = period(It_OT[-550000:], Vt_OT[-550000:])
+            periods_grid[Iin_index][Rs_index] = period(Vs_OT[-550000:], dt)
             Rs_index += 1
         Iin_index += 1
 

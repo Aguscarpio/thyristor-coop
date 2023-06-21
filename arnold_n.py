@@ -35,9 +35,9 @@ It0 = Vt0 = Vs0 = 0.1
 #  minIin = 0.1
 #  maxIin = 2
 minRs = 0.01
-maxRs = 8
+maxRs = 5
 minIin = 0.01
-maxIin = 3
+maxIin = 2.5
 #  Rs 0.01-8
 #  Iin 0.01-3
 #  Cm = 10

@@ -1,14 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import time
-from period_funcs import period
+#  from period_funcs import period
+from poincare import period
 from numba import njit, jit
 
 Cs = 0.1
 
 @njit()
 def modelo_thyristor(It, Vt, Vs, Rs, Iin, Cm):
-    It_dot = It*(Vt - 16.3) + 5*It**2 - It**3 + 0.1
+    It_dot = It*(Vt - 10) + 4.85*It**2 - 0.594*It**3 + 0.1
     Vt_dot = Iin/Cm - It*(1/Cm + 1/Cs) + Vs/(Rs*Cs)
     Vs_dot = (1/Cs)*(It - Vs/Rs)
 
@@ -64,7 +65,7 @@ if __name__ == "__main__":
 
     #  t0 = time.time()
 
-    print(f"Solución de período {period(It_OT, Vt_OT)}")
+    #  print(f"Solución de período {period(It_OT, Vt_OT)}")
     #  tf = time.time()
     #  print(f"tardó {tf-t0} en hacer {N_steps}")
     #  plt.show()

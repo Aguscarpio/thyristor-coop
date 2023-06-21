@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import time
-from poincare import period
+from poincare import period, period_temporal
 from numba import njit, jit
 
 Cs = 0.1
@@ -41,8 +41,8 @@ if __name__ == "__main__":
     total_time = 1600
     dt = 0.001
     N_steps = int(total_time/dt)
-    Iin0 = 2.2
-    Rs0 = 4
+    Iin0 = 1.15
+    Rs0 = 3.05
     Cm = 10
 
     It0 = Vt0 = Vs0 = 0.1
@@ -52,8 +52,8 @@ if __name__ == "__main__":
 
 
     It_OT, Vt_OT, Vs_OT = rk4_numba(It0, Vt0, Vs0, N_steps, dt, Rs0, Iin0, Cm)
-    It_OT = It_OT
-    Vt_OT = Vt_OT
+    #  It_OT = It_OT
+    #  Vt_OT = Vt_OT
     times = np.arange(0, N_steps*dt, dt)
     #  fig, ax = plt.subplots(1,1, figsize=(16,9))
     fig, [ax1, ax2, ax3] = plt.subplots(3,1, sharex=True, figsize=(16,9))
@@ -65,9 +65,9 @@ if __name__ == "__main__":
 
     #  t0 = time.time()
 
-    print(f"Solución de período {period(Vs_OT[int(800/dt):], dt)}")
+    print(f"Solución de período {period_temporal(Vs_OT[int(800/dt):], dt)}")
 
-    plt.plot(Vt_OT[int(800/dt):], np.gradient(Vt_OT)[int(800/dt):])
+    #  plt.plot(Vt_OT[int(800/dt):], np.gradient(Vt_OT)[int(800/dt):])
     plt.show()
     #  tf = time.time()
     #  print(f"tardó {tf-t0} en hacer {N_steps}")

@@ -46,8 +46,8 @@ dimRs = args.dimRs[0]
 dimIin = args.dimIin[0]
 Cm = args.Cm[0]
 
-if not os.path.isdir(f"results_lean_agus/Cm{str(float(Cm))}_a16.3"):
-    os.system(f"mkdir results_lean_agus/Cm{str(float(Cm))}_a16.3")
+if not os.path.isdir(f"results_lean_agus/Cm{str(float(Cm))}_b4.85_c0.594"):
+    os.system(f"mkdir results_lean_agus/Cm{str(float(Cm))}_b4.85_c0.594")
 
 for arn_number in range(ncpus):
     os.system(f"python3 {target_program} {arn_number} {ncpus}" +

@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import time
-from period_funcs import period
+from poincare import period
 from numba import njit, jit
 
 Cs = 0.1
@@ -42,7 +42,7 @@ def rk4_numba(It0, Vt0, Vs0, N_steps, dt, Rs, Iin, Cm, Cs, a, b, c, d):
 
 if __name__ == "__main__":
     from matplotlib.widgets import Slider
-    total_time = 1300
+    total_time = 1600
     dt = 0.01
     N_steps = int(total_time/dt)
     Iin0 = 1
@@ -50,14 +50,14 @@ if __name__ == "__main__":
     Cm = 10
 
     It0 = Vt0 = Vs0 = 0.1
-    #  It0 = 1
-    #  Vt0 = 5.91
-    #  Vs0 = 100/29
+    #  It0 = 1.7
+    #  Vt0 = 4.4
+    #  Vs0 = 2.4
 
 
     It_OT, Vt_OT, Vs_OT = rk4_numba(It0, Vt0, Vs0, N_steps, dt, Rs0, Iin0, Cm, Cs, a, b, c, d)
-    It_OT = It_OT
-    Vt_OT = Vt_OT
+    #  It_OT = It_OT
+    #  Vt_OT = Vt_OT
     times = np.arange(0, N_steps*dt, dt)
     #  fig, ax = plt.subplots(1,1, figsize=(16,9))
     fig, [ax1, ax2, ax3] = plt.subplots(3,1, sharex=True, figsize=(16,9))
@@ -75,15 +75,15 @@ if __name__ == "__main__":
     ax3d.set_zlabel('Vs')
 
     IinAx = fig2.add_axes([0.15, 0.85, 0.75, 0.03])
-    sIin = Slider(IinAx, 'Iin', 0, 3, valinit=1)
+    sIin = Slider(IinAx, 'Iin', 1.7, 1.8, valinit=1.78)
     RsAx = fig2.add_axes([0.15, 0.75, 0.75, 0.03])
-    sRs = Slider(RsAx, 'Rs', 0, 8, valinit=1)
+    sRs = Slider(RsAx, 'Rs', 0, 8, valinit=1.4)
     CsAx = fig2.add_axes([0.15, 0.65, 0.75, 0.03])
     sCs = Slider(CsAx, 'Cs', 0.001, 2, valinit=0.1)
     CmAx = fig2.add_axes([0.15, 0.55, 0.75, 0.03])
-    sCm = Slider(CmAx, 'Cm', 0, 20, valinit=10)
+    sCm = Slider(CmAx, 'Cm', 0, 40, valinit=10)
     aAx = fig2.add_axes([0.15, 0.45, 0.75, 0.03])
-    sa = Slider(aAx, 'a', 0, 20 , valinit=16.3)
+    sa = Slider(aAx, 'a', 0, 20 , valinit=10)
     bAx = fig2.add_axes([0.15, 0.35, 0.75, 0.03])
     sb = Slider(bAx, 'b', 0, 10 , valinit=5)
     cAx = fig2.add_axes([0.15, 0.25, 0.75, 0.03])
