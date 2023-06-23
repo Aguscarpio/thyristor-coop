@@ -41,8 +41,14 @@ if __name__ == "__main__":
     total_time = 1600
     dt = 0.001
     N_steps = int(total_time/dt)
-    Iin0 = 1.15
-    Rs0 = 3.05
+    #  Iin0 = 1.313
+    #  Rs0 = 2.3
+    #  Iin0 = 0.8223
+    #  Rs0 = 3.086
+    #  Iin0 = 1.351466
+    #  Rs0 = 2.22524
+    Iin0 = 0.726
+    Rs0 = 3.176
     Cm = 10
 
     It0 = Vt0 = Vs0 = 0.1
