@@ -49,19 +49,29 @@ if __name__ == "__main__":
     #  Rs0 = 2.22524
     #  Iin0 = 0.726
     #  Rs0 = 3.176
-    #  Iin0 = 0.9
-    #  Rs0 = 2.93
+    Iin0 = 1
+    Rs0 = 3.5
     #  Iin0 = 0.43
     #  Rs0 = 3.000
-    Iin0 = 0.6
-    Rs0 = 2.66
+
+
+    #  Iin0 = 1.618169636457
+    #  eps =  0.000000000001
+    #  Iin0 = 1.61816963
+    #  eps =  0.00000001
+    #  Rs0 = 1.705
     Cm = 10
 
     It0 = Vt0 = Vs0 = 0.1
     #  It0 = 1
     #  Vt0 = 5.91
     #  Vs0 = 100/29
-
+    #  It0 = 1.5772688376501063
+    #  Vt0 = 4.505056178608963
+    #  Vs0 = 2.704358084805494
+    #  It0 = 1.3330207099756717
+    #  Vt0 = 4.997315571210392
+    #  Vs0 = 2.2881011819475576
 
     It_OT, Vt_OT, Vs_OT = rk4_numba(It0, Vt0, Vs0, N_steps, dt, Rs0, Iin0, Cm)
     #  It_OT = It_OT
@@ -73,11 +83,20 @@ if __name__ == "__main__":
     ax1.plot(times, It_OT)
     ax2.plot(times, Vt_OT)
     ax3.plot(times, Vs_OT)
+    #  It_OT, Vt_OT, Vs_OT = rk4_numba(It0, Vt0, Vs0, N_steps, dt, Rs0, Iin0+eps, Cm)
+    #  ax1.plot(times, It_OT)
+    #  ax2.plot(times, Vt_OT)
+    #  ax3.plot(times, Vs_OT)
     plt.show()
+
+    with open("p1_blue.npy", "wb") as f:
+        np.save(f, Vs_OT[int(1200/dt):int(1250/dt)])
+
 
     #  t0 = time.time()
 
     print(f"Solución de período {period_temporal(Vs_OT[int(800/dt):], dt)}")
+    print(f"Last state:\nIt0 = {It_OT[-1]}\nVt0 = {Vt_OT[-1]}\nVs0 = {Vs_OT[-1]}")
 
     #  plt.plot(Vt_OT[int(800/dt):], np.gradient(Vt_OT)[int(800/dt):])
     plt.show()

@@ -24,7 +24,7 @@ cmap = LinearSegmentedColormap.from_list('my_gradient', (
     (0.500, (0.922, 0.933, 0.847)),
     (1.000, (0.906, 0.753, 0.086))))
 #-------------
-with open("results_lean_agus/Cm10.0f/periodsgrid_total.npy", "rb") as f:
+with open("results_lean_agus/Cm10.0/periodsgrid_total.npy", "rb") as f:
     periodsgrid_total = np.load(f)
 
 with open("periods_burst_grid.npy", "rb") as f:
@@ -51,7 +51,9 @@ periodsbgrid_total[22][131] = np.nan
 periodstgrid_total = xr.DataArray(periodstgrid_total.repeat(3, axis=0).repeat(3, axis=1), dims=("Iin", "Rs"), coords={"Rs": np.linspace(0.01, 5, 3*210), "Iin": np.linspace(0.01, 2.5, 3*210)})
 periodsbgrid_total = xr.DataArray(periodsbgrid_total, dims=("Iin", "Rs"), coords={"Rs": np.linspace(0.01, 5, 3*210), "Iin": np.linspace(0.01, 2.5, 3*210)})
 
-periodstgrid_total.plot(ax=ax, cmap="seismic", center=30, vmax=100)
+rb = periodstgrid_total.plot(ax=ax, cmap="seismic", center=30, vmin=0)
+rbb_pos = rb.colorbar.ax.get_position()
+rb.colorbar.ax.set_position([rbb_pos.x0-0.08, rbb_pos.y0, rbb_pos.width, rbb_pos.height])
 periodsbgrid_total.plot(ax=ax, cmap=cmap, robust=True)
 ax.set_xlabel("")
 #  spikes = sns.heatmap(periodstgrid_total, cmap="seismic", center=30, vmax=100, vmin=0, ax=ax)#, vmax=center+1, vmin=center-1)
@@ -69,8 +71,8 @@ minRs = 0.01
 maxRs = 5
 minIin = 0.01
 maxIin = 2.5
-dimIin = 210
-dimRs = 210
+dimIin = 1400
+dimRs = 1400
 Iinrange = np.linspace(minIin, maxIin, dimIin)
 Rsrange = np.linspace(minRs, maxRs, dimRs)
 
@@ -84,6 +86,8 @@ cbar = plt.colorbar(cm1)
 pos = ax1.get_position()
 pos.x1 = ax.get_position().x1
 ax1.set_position(pos)
+cbarpos = cbar.ax.get_position()
+cbar.ax.set_position([cbarpos.x0-0.102, cbarpos.y0, cbarpos.width, cbarpos.height])
 
 ax1.set_xlabel(r"$R_s$ (a.u)", size=18)
 ax1.set_ylabel(r"$I_{in} $ (a.u)", size=18)
@@ -92,6 +96,34 @@ ax1.tick_params(axis='both', which='major', labelsize=18)
 ax.set_ylabel(r"$I_{in} $ (a.u)", size=18)
 
 ax1.set_facecolor("#eeeeee")
+
+axp1 = fig.add_axes([0.76, 0.72, 0.1, 0.15])
+axp2 = fig.add_axes([0.89, 0.72, 0.1, 0.15])
+axp3 = fig.add_axes([0.76, 0.52, 0.1, 0.15])
+axp4 = fig.add_axes([0.89, 0.52, 0.1, 0.15])
+
+
+with open("p1_red.npy", "rb") as f:
+    Vs_OT = np.load(f)
+axp1.plot(np.arange(0,len(Vs_OT))*0.001, Vs_OT, "#a20000")
+
+with open("p1_blue.npy", "rb") as f:
+    Vs_OT = np.load(f)
+axp2.plot(np.arange(0,len(Vs_OT))*0.001, Vs_OT, "#00007c")
+
+with open("p4_yellow.npy", "rb") as f:
+    Vs_OT = np.load(f)
+axp3.plot(np.arange(0,len(Vs_OT))*0.001, Vs_OT, "#e9da85")
+
+with open("p4_green.npy", "rb") as f:
+    Vs_OT = np.load(f)
+axp4.plot(np.arange(0,len(Vs_OT))*0.001, Vs_OT, "#b8d1a5")
+
+axp1.set_ylim(0, 6.7)
+axp2.set_ylim(0, 6.7)
+axp3.set_ylim(0, 6.7)
+axp4.set_ylim(0, 6.7)
+
 
 plt.show()
 

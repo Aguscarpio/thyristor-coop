@@ -15,7 +15,7 @@ dt = 0.003
 #  Iin0 = 1.2
 Cm = 10.0
 
-dimRs = dimIin = 210
+dimRs = dimIin = 1400
 #-------------
 cmap = LinearSegmentedColormap.from_list('my_gradient', (
     # Edit this gradient at https://eltos.github.io/gradient/#E4D522-FFFFFF-65A151
@@ -32,35 +32,35 @@ with open("results_lean_agus/Cm10.0/periodsgrid_total.npy", "rb") as f:
 #  times = np.arange(0, int(dt*N_steps), dt)
 
 #  with open("periods_t_grid.npy", "rb") as f:
-with open("periods_burst_grid_210.npy", "rb") as f:
-    periodsbgrid_total = np.load(f)
+#  with open("periods_burst_grid_210.npy", "rb") as f:
+    #  periodsbgrid_total = np.load(f)
 
-with open("periods_t_grid.npy", "rb") as f:
-    periodstgrid_total = np.load(f)
+#  with open("periods_t_grid.npy", "rb") as f:
+    #  periodstgrid_total = np.load(f)
 
-import seaborn as sns
-fig, ax = plt.subplots(figsize=(16,9))
+#  import seaborn as sns
+#  fig, ax = plt.subplots(figsize=(16,9))
 
-#  Rsrange = np.linspace(0.01, 5, dimRs)
-#  Iinrange = np.linspace(0.01, 2.5, dimIin)
-#  kk, tt = np.meshgrid(Rsrange, Iinrange)
-#  cm1 = ax.pcolormesh(kk, tt, periodstgrid_total)
+#  #  Rsrange = np.linspace(0.01, 5, dimRs)
+#  #  Iinrange = np.linspace(0.01, 2.5, dimIin)
+#  #  kk, tt = np.meshgrid(Rsrange, Iinrange)
+#  #  cm1 = ax.pcolormesh(kk, tt, periodstgrid_total)
 
-periodsbgrid_total[22][131] = np.nan
+#  periodsbgrid_total[22][131] = np.nan
 
-center = 0.5
-sat = 0.5
-spikes = sns.heatmap(periodstgrid_total, cmap="seismic", center=30, vmax=100, vmin=0)#, vmax=center+1, vmin=center-1)
-bursts = sns.heatmap(periodsbgrid_total, cmap=cmap)
-spikes.set_facecolor("#bbbbbb")
-ax.invert_yaxis()
-ax.get_xaxis().set_ticks([])
-ax.get_yaxis().set_ticks([])
-plt.show()
+#  center = 0.5
+#  sat = 0.5
+#  spikes = sns.heatmap(periodstgrid_total, cmap="seismic", center=30, vmax=100, vmin=0)#, vmax=center+1, vmin=center-1)
+#  bursts = sns.heatmap(periodsbgrid_total, cmap=cmap)
+#  spikes.set_facecolor("#bbbbbb")
+#  ax.invert_yaxis()
+#  ax.get_xaxis().set_ticks([])
+#  ax.get_yaxis().set_ticks([])
+#  plt.show()
 
 
 
-raise
+#  raise
 
 periods_t_grid = np.empty(shape=(dimIin,dimRs))*np.nan
 Rsrange = np.linspace(0.01, 5, dimRs)
