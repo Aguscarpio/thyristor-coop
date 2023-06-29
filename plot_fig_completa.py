@@ -43,13 +43,23 @@ fig, [ax, ax1] = plt.subplots(2, 1, figsize=(16,9), sharex=True, sharey=True)
 
 periodsbgrid_total[22][131] = np.nan
 
+#  p1_idx = np.where(periodsgrid_total == 1)
+#  nan_idx = np.where(np.isnan(periodstgrid_total))
+#  p1_set = set((i,j) for i,j in zip(p1_idx[0], p1_idx[1]))
+#  nan_set = set((i,j) for i,j in zip(nan_idx[0], nan_idx[1]))
+#  p1nan_set = p1_set.intersection(nan_set)
+p1nan = np.where(np.logical_and(periodsgrid_total == 1, np.isnan(periodstgrid_total)))
+
+periodstgrid_total[p1nan] = 60
+
 #--------------
 #  cbar_ax1 = fig.add_axes([.67, .55, .01, .3])
 #  cbar_ax2 = fig.add_axes([.78, .55, .01, .3])
 #--------------
 
-periodstgrid_total = xr.DataArray(periodstgrid_total.repeat(3, axis=0).repeat(3, axis=1), dims=("Iin", "Rs"), coords={"Rs": np.linspace(0.01, 5, 3*210), "Iin": np.linspace(0.01, 2.5, 3*210)})
-periodsbgrid_total = xr.DataArray(periodsbgrid_total, dims=("Iin", "Rs"), coords={"Rs": np.linspace(0.01, 5, 3*210), "Iin": np.linspace(0.01, 2.5, 3*210)})
+#  periodstgrid_total = xr.DataArray(periodstgrid_total.repeat(3, axis=0).repeat(3, axis=1), dims=("Iin", r"$\tau_s$"), coords={r"$\tau_s$": 0.1*np.linspace(0.01, 5, 3*210), "Iin": np.linspace(0.01, 2.5, 3*210)})
+periodstgrid_total = xr.DataArray(periodstgrid_total, dims=("Iin", r"$\tau_s$"), coords={r"$\tau_s$": 0.1*np.linspace(0.01, 5, 1400), "Iin": np.linspace(0.01, 2.5, 1400)})
+periodsbgrid_total = xr.DataArray(periodsbgrid_total, dims=("Iin", r"$\tau_s$"), coords={r"$\tau_s$": 0.1*np.linspace(0.01, 5, 3*210), "Iin": np.linspace(0.01, 2.5, 3*210)})
 
 rb = periodstgrid_total.plot(ax=ax, cmap="seismic", center=30, vmin=0)
 rbb_pos = rb.colorbar.ax.get_position()
@@ -75,8 +85,9 @@ dimIin = 1400
 dimRs = 1400
 Iinrange = np.linspace(minIin, maxIin, dimIin)
 Rsrange = np.linspace(minRs, maxRs, dimRs)
+tausrange = 0.1*Rsrange
 
-kk, tt = np.meshgrid(Rsrange, Iinrange)
+kk, tt = np.meshgrid(tausrange, Iinrange)
 
 colors = plt.cm.get_cmap('tab20',16)(np.arange(8))
 cmap = matplotlib.colors.ListedColormap(colors, "")
@@ -89,7 +100,7 @@ ax1.set_position(pos)
 cbarpos = cbar.ax.get_position()
 cbar.ax.set_position([cbarpos.x0-0.102, cbarpos.y0, cbarpos.width, cbarpos.height])
 
-ax1.set_xlabel(r"$R_s$ (a.u)", size=18)
+ax1.set_xlabel(r"$\tau_s$ (a.u)", size=18)
 ax1.set_ylabel(r"$I_{in} $ (a.u)", size=18)
 ax.tick_params(axis='both', which='major', labelsize=18)
 ax1.tick_params(axis='both', which='major', labelsize=18)

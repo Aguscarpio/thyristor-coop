@@ -75,9 +75,11 @@ if __name__ == "__main__":
     ax3d.set_zlabel('Vs')
 
     IinAx = fig2.add_axes([0.15, 0.85, 0.75, 0.03])
-    sIin = Slider(IinAx, 'Iin', 1.7, 1.8, valinit=1.78)
+    #  sIin = Slider(IinAx, 'Iin', 0.46, 0.59, valinit=0.5) # p2 transitions
+    sIin = Slider(IinAx, 'Iin', 1.541, 1.547, valinit=1.542) # blue-red
     RsAx = fig2.add_axes([0.15, 0.75, 0.75, 0.03])
-    sRs = Slider(RsAx, 'Rs', 0, 8, valinit=1.4)
+    #  sRs = Slider(RsAx, 'Rs', 2.9, 3.4, valinit=3.105) #p2
+    sRs = Slider(RsAx, 'Rs', 1.7, 2.1, valinit=1.85) #blue-red
     CsAx = fig2.add_axes([0.15, 0.65, 0.75, 0.03])
     sCs = Slider(CsAx, 'Cs', 0.001, 2, valinit=0.1)
     CmAx = fig2.add_axes([0.15, 0.55, 0.75, 0.03])
@@ -98,11 +100,16 @@ if __name__ == "__main__":
     ItVt_plot, = ax1_3.plot(Vt_OT, It_OT)
     ItVs_plot, = ax2_3.plot(Vs_OT, It_OT)
     VtVs_plot, = ax3_3.plot(Vt_OT, Vs_OT)
+    ItVt_plot_notrans, = ax1_3.plot(Vt_OT[int(-400/dt):], It_OT[int(-400/dt):], "#dd2222")
+    ItVs_plot_notrans, = ax2_3.plot(Vs_OT[int(-400/dt):], It_OT[int(-400/dt):], "#dd2222")
+    VtVs_plot_notrans, = ax3_3.plot(Vt_OT[int(-400/dt):], Vs_OT[int(-400/dt):], "#dd2222")
     ax1_3.set_title("It contra Vt")
     ax2_3.set_title("It contra Vs")
     ax3_3.set_title("Vs contra Vt")
 
+
     def update(val):
+        global It_OT, Vt_OT, Vs_OT
         Rs = sRs.val
         Iin = sIin.val
         Cs = sCs.val
@@ -118,6 +125,9 @@ if __name__ == "__main__":
         ItVt_plot.set_data(Vt_OT, It_OT)
         ItVs_plot.set_data(Vs_OT, It_OT)
         VtVs_plot.set_data(Vt_OT, Vs_OT)
+        ItVt_plot_notrans.set_data(Vt_OT[int(-400/dt):], It_OT[int(-400/dt):])
+        ItVs_plot_notrans.set_data(Vs_OT[int(-400/dt):], It_OT[int(-400/dt):])
+        VtVs_plot_notrans.set_data(Vt_OT[int(-400/dt):], Vs_OT[int(-400/dt):])
         ax3d.clear()
         plot_3d, = ax3d.plot(It_OT, Vt_OT, Vs_OT, color='red', linewidth=0.1)
         for ax in [ax1, ax2, ax3, ax1_3, ax2_3, ax3_3]:
@@ -128,6 +138,12 @@ if __name__ == "__main__":
         fig3.canvas.draw_idle()
         fig4.canvas.draw_idle()
 
+    def onclick(event):
+        global It0, Vt0, Vs0
+        It0, Vt0, Vs0 = It_OT[-1], Vt_OT[-1], Vs_OT[-1]
+        update(event)
+
+    fig3.canvas.mpl_connect('button_press_event',onclick)
     sIin.on_changed(update)
     sRs.on_changed(update)
     sCs.on_changed(update)

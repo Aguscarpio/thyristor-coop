@@ -33,7 +33,7 @@ It0 = Vt0 = Vs0 = 0.1
 minRs = 0.01
 maxRs = 5
 minIin = 0.01
-maxIin = 3.5
+maxIin = 3
 
 # main function
 def run_arnold(arn_number, ncpus, dimRs, dimIin, N_steps, dt, Cm):

@@ -9,7 +9,8 @@ Cs = 0.1
 @njit()
 def modelo_thyristor(It, Vt, Vs, Rs, Iin, Cm):
     #  It_dot = It*(Vt - 13.2) + 8.44*It**2 - 2.025*It**3 + 0.1
-    It_dot = It*(Vt - 10) + 5*It**2 - It**3 + 0.1
+    #  It_dot = It*(Vt - 10) + 4.85*It**2 - 0.594*It**3 + 0.1
+    It_dot = It*(Vt - 10) + 5*It**2 - 1*It**3 + 0.1
     Vt_dot = Iin/Cm - It*(1/Cm + 1/Cs) + Vs/(Rs*Cs)
     Vs_dot = (1/Cs)*(It - Vs/Rs)
 
@@ -49,8 +50,12 @@ if __name__ == "__main__":
     #  Rs0 = 2.22524
     #  Iin0 = 0.726
     #  Rs0 = 3.176
-    Iin0 = 1
-    Rs0 = 3.5
+    #  Iin0 = 1.86
+    #  Rs0 = 2.68
+    #  Iin0 = 0.46
+    #  Rs0 = 3.05
+    Iin0 = 0.59
+    Rs0 = 3.334
     #  Iin0 = 0.43
     #  Rs0 = 3.000
 
@@ -63,6 +68,10 @@ if __name__ == "__main__":
     Cm = 10
 
     It0 = Vt0 = Vs0 = 0.1
+    It0 = 0.43245852343084173
+    Vt0 = 7.9598888975638316
+    Vs0 = 1.3757246215300096
+
     #  It0 = 1
     #  Vt0 = 5.91
     #  Vs0 = 100/29
@@ -89,14 +98,14 @@ if __name__ == "__main__":
     #  ax3.plot(times, Vs_OT)
     plt.show()
 
-    with open("p1_blue.npy", "wb") as f:
-        np.save(f, Vs_OT[int(1200/dt):int(1250/dt)])
+    #  with open("p1_blue.npy", "wb") as f:
+        #  np.save(f, Vs_OT[int(1200/dt):int(1250/dt)])
 
 
     #  t0 = time.time()
 
     print(f"Solución de período {period_temporal(Vs_OT[int(800/dt):], dt)}")
-    print(f"Last state:\nIt0 = {It_OT[-1]}\nVt0 = {Vt_OT[-1]}\nVs0 = {Vs_OT[-1]}")
+    print(f"Last state:\n    It0 = {It_OT[-1]}\n    Vt0 = {Vt_OT[-1]}\n    Vs0 = {Vs_OT[-1]}")
 
     #  plt.plot(Vt_OT[int(800/dt):], np.gradient(Vt_OT)[int(800/dt):])
     plt.show()
